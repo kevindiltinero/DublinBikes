@@ -4,6 +4,9 @@ import pandas as pd
 from time import gmtime, strftime
 import sqlite3
 import pandas.io.sql as pdsql
+import pandas as pd
+import numpy as np
+
 
 def scrape_Info():
     #To catch the exception
@@ -36,13 +39,20 @@ def into_Database(data):
     #Have to connect to the cursor
     c = conn.cursor()
     #Command to execute sql on the database
-    c.execute("CREATE TABLE IF NOT EXISTS dublinbikes(idx INTEGER, address TEXT, number1 INTEGER, number2 INTEGER, boolean1 TEXT, bikes INTEGER, boolean2 TEXT, number3 INTEGER)")
+    c.execute("CREATE TABLE IF NOT EXISTS dublinbikes(address TEXT, available_bike_stands INT, available_bikes INT, "
+              "banking BOOLEAN, bike_stands INT, bonus BOOLEAN, contract_name TEXT, last_update INT, name TEXT, number INT, "
+              "position TEXT,  status TEXT)")
     conn.commit()
 
     #This is putting the list into a data frame
     frame = pd.DataFrame(data)
+    frame['position'] = frame['position'].astype('S32')
+    #frame['bonus'] = frame['bonus'].astype('object')
     #This is formatting the time
-    frame['time'] = strftime("%Y%m%d%H%M%S", gmtime())
+    frame['last_update'] = strftime("%Y%m%d%H%M%S", gmtime())
+
     #Write records stored in a dataframe to an SQL database.
     pdsql.write_frame(frame, "dublinbikes", conn, flavor="sqlite", if_exists="append", )
+    #frame.to_sql("dublinikes", conn, flavor='sqlite', schema=None, if_exists='append', index=True, index_label=None,)
     conn.commit()
+
