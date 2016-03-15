@@ -11,16 +11,16 @@ def single_run():
 
 def full_run():
     while True:
-        Scrape the data from the API.
+        #Scrape the data from the API.
         data = Scrape.scrape_Info()
         if data:
-            Into the .csv
+            #Into the .csv
             Scrape.into_File(data, 'fullscrape.csv')
-            Into the database
+            #Into the database
             Scrape.into_Database(data)
-        #
+        #300 seconds in between loop executions
         time.sleep(300)
 
 
-single_run()
-#full_run()
+#single_run()
+full_run()

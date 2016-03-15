@@ -14,11 +14,13 @@ conn = sqlite3.connect('dublinbikes.db')
 c = conn.cursor()
 #Command to execute sql on the database
 
+
 def create_Database():
     c.execute("CREATE TABLE IF NOT EXISTS dublinbikes(address TEXT, available_bike_stands INT, available_bikes INT, "
               "banking BOOLEAN, bike_stands INT, bonus BOOLEAN, contract_name TEXT, last_update INT, name TEXT, number INT, "
               "position TEXT,  status TEXT)")
-conn.commit()
+    conn.commit()
+
 
 def scrape_Info():
     #To catch the exception
