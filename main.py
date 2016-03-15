@@ -1,7 +1,8 @@
 from src import Scrape
 import time
 
-Scrape.create_Database()
+#THIS IS TO CRAETE THE DATABASE. LEAVE UNCHECKED FOR NOW ONLY NEED TO CREATE DB AT THE START
+#Scrape.create_Database()
 
 def single_run():
     data = Scrape.scrape_Info()
