@@ -1,11 +1,9 @@
 #Import the needed packages
 import requests
-import pandas as pd
 from time import gmtime, strftime
 import sqlite3
 import pandas.io.sql as pdsql
 import pandas as pd
-import numpy as np
 
 
 #Have to set up connection while using the database.
@@ -13,6 +11,10 @@ conn = sqlite3.connect('dublinbikes.db')
 #Have to connect to the cursor
 c = conn.cursor()
 #Command to execute sql on the database
+
+
+conn = sqlite3.connect('dublinbikes.db')
+c = conn.cursor()
 
 
 def create_Database():

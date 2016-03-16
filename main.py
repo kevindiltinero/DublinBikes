@@ -1,8 +1,6 @@
 from src import Scrape
 import time
 
-#THIS IS TO CRAETE THE DATABASE. LEAVE UNCHECKED FOR NOW ONLY NEED TO CREATE DB AT THE START
-#Scrape.create_Database()
 
 def single_run():
     data = Scrape.scrape_Info()
@@ -10,7 +8,9 @@ def single_run():
     Scrape.into_Database(data)
 
 
-def full_run():
+def main():
+    #CREATE THE DATABASE
+    Scrape.create_Database()
     while True:
         #Scrape the data from the API.
         data = Scrape.scrape_Info()
@@ -22,6 +22,8 @@ def full_run():
         #300 seconds in between loop executions
         time.sleep(300)
 
-
+#NOT USING ANYMORE THIS WAS TO GET TEST DATA
 #single_run()
-full_run()
+
+#THIS IS IT!!!!
+main()
