@@ -7,19 +7,19 @@
     <link rel="icon" href="icon.png"><!-- put icon in tab bar in browser -->
     
     <script>
-        var myCenter;
+        var myCentre;
         function initialize() {
-            myCenter=new google.maps.LatLng(53.344007,-6.266802);
-            var mapProp = {
-                center: myCenter,
+            myCentre = new google.maps.LatLng(53.344007,-6.266802);
+            var mapProps = {
+                center: myCentre,
                 zoom:19,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
-            var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+            var map = new google.maps.Map(document.getElementById("googleMap"),mapProps);
             
-            var marker=new google.maps.Marker({
-                position:myCenter,
-                icon:"green.png"
+            var marker = new google.maps.Marker({
+                position: myCentre,
+                icon: "green.png"
             });
             marker.setMap(map);
         }
