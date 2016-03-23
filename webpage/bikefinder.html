@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BikeFinder</title>
+    <link rel=stylesheet type="text/css" href="bikefinder.css">
+    <link rel="icon" href="icon.png"><!-- put icon in tab bar in browser -->
+    
+    <script>
+        var myCenter;
+        function initialize() {
+            myCenter=new google.maps.LatLng(53.344007,-6.266802);
+            var mapProp = {
+                center: myCenter,
+                zoom:19,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+            
+            var marker=new google.maps.Marker({
+                position:myCenter,
+                icon:"green.png"
+            });
+            marker.setMap(map);
+        }
+
+        function loadScript() {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "http://maps.googleapis.com/maps/api/js?key=&sensor=false&callback=initialize";
+            document.body.appendChild(script);
+        }
+
+        window.onload = loadScript;
+    </script>
+</head>
+
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+    
+<header>
+    <div>
+        <img src="Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" />
+    </div>
+    <h1>BikeFinder <span>Dublin</span></h1>
+</header>
+    
+<body>
+<div id="container">
+    <nav><!-- navigation bar -->
+        <ul>
+            <!-- change to other maps -->
+            <li id="bikes">Bikes Near Me</li>
+            <li id="spaces">Spaces Near Me</li>
+            <li id="address">Search By Address</li>
+        </ul>
+    </nav>
+    <div id="googleMap"></div>
+</div>
+    
+<footer>
+    <p>Copyright 2016 Stephen Murphy, Kevin Fitzpatrick, Keith Kennedy. All Rights Reserved.</p>
+</footer>
+</body>
+</html>
