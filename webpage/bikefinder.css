@@ -79,8 +79,8 @@ nav ul li:hover {
     height: 400px;
 }
 
-/* styling on nav bar for button of current page */
-#bikes {
+/* styling on nav bar for button of current selection */
+#current {
     background-color: rgb(0, 76, 84);
     color: white;
     box-shadow: 0 3px 10px 0px grey; /* makes a shadow behind button */

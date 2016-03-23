@@ -8,26 +8,65 @@
     
     <script>
         var myCentre;
-        function initialize() {
+        function initialise(x) {
             myCentre = new google.maps.LatLng(53.344007,-6.266802);
             var mapProps = {
                 center: myCentre,
-                zoom:19,
+                zoom: 19,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("googleMap"),mapProps);
             
-            var marker = new google.maps.Marker({
-                position: myCentre,
-                icon: "green.png"
-            });
-            marker.setMap(map);
+            var current = document.getElementById("current");
+            if(x==1) { /* bikes near me */
+                var marker = new google.maps.Marker({
+                    position: myCentre,
+                    icon: "green.png"
+                });
+                marker.setMap(map);
+                if (!current.innerHTML.match("Bikes Near Me")) {
+                    if (current.innerHTML.match("Spaces Near Me")) {
+                        current.id="spaces";
+                    } else {
+                        current.id="address";
+                    }
+                    document.getElementById("bikes").id="current"
+                }
+            } else if (x==2) { /* stands near me */
+                var marker = new google.maps.Marker({
+                    position: myCentre,
+                    icon: "finishgreen.png"
+                });
+                marker.setMap(map);
+                if (!current.innerHTML.match("Spaces Near Me")) {
+                    if (current.innerHTML.match("Bikes Near Me")) {
+                        current.id="bikes";
+                    } else {
+                        current.id="address";
+                    }
+                    document.getElementById("spaces").id="current"
+                }
+            } else if (x==3) { /* search by address */
+                var marker = new google.maps.Marker({
+                    position: myCentre,
+                    icon: "finishred.png" /* temporary holder */
+                });
+                marker.setMap(map);
+                if (!current.innerHTML.match("Search By Address")) {
+                    if (current.innerHTML.match("Spaces Near Me")) {
+                        current.id="spaces";
+                    } else {
+                        current.id="bikes";
+                    }
+                    document.getElementById("address").id="current"
+                }
+            }
         }
 
         function loadScript() {
             var script = document.createElement("script");
             script.type = "text/javascript";
-            script.src = "http://maps.googleapis.com/maps/api/js?key=&sensor=false&callback=initialize";
+            script.src = "http://maps.googleapis.com/maps/api/js?key=&sensor=false&callback=initialise";
             document.body.appendChild(script);
         }
 
@@ -36,7 +75,11 @@
 </head>
 
 <script src="http://maps.googleapis.com/maps/api/js"></script>
-    
+
+
+
+
+
 <header>
     <div>
         <img src="Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" />
@@ -49,9 +92,9 @@
     <nav><!-- navigation bar -->
         <ul>
             <!-- change to other maps -->
-            <li id="bikes">Bikes Near Me</li>
-            <li id="spaces">Spaces Near Me</li>
-            <li id="address">Search By Address</li>
+            <li id="current" onclick="initialise(1)">Bikes Near Me</li>
+            <li id="spaces" onclick="initialise(2)">Spaces Near Me</li>
+            <li id="address" onclick="initialise(3)">Search By Address</li>
         </ul>
     </nav>
     <div id="googleMap"></div>
