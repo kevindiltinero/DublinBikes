@@ -20,9 +20,11 @@
             }
             navigator.geolocation.getCurrentPosition(found);
         }
-
+        
+        findLocation();
+        
         function initialise(x) {
-            findLocation();
+//            findLocation();
             // map properties
             var mapProps = {
                 center: myCentre,
@@ -42,12 +44,12 @@
                 if (!current.innerHTML.match("Bikes Near Me")) {
                     if (current.innerHTML.match("Spaces Near Me")) {
                         current.id="spaces";
-                    } else if (current.innerHTML.match("")) {
-                        current.removeAttribute("id");
+                    } else if (current.innerHTML.match("Search By Station Address")) {
+                        current.id="address";;
                     } else {
-                        current.id="address";
+                        current.removeAttribute("id");
                     }
-                    document.getElementById("bikes").id="current"
+                    document.getElementById("bikes").id="current";
                 }
             } else if (x==2) { // spaces near me
                 var marker = new google.maps.Marker({
@@ -58,12 +60,12 @@
                 if (!current.innerHTML.match("Spaces Near Me")) {
                     if (current.innerHTML.match("Bikes Near Me")) {
                         current.id="bikes";
-                    } else if (current.innerHTML.match("")) {
-                        current.removeAttribute("id");
-                    } else {
+                    } else if (current.innerHTML.match("Search By Station Address")) {
                         current.id="address";
+                    } else {
+                        current.removeAttribute("id");
                     }
-                    document.getElementById("spaces").id="current"
+                    document.getElementById("spaces").id="current";
                 }
             } else if (x==3) { // search by address
                 var marker = new google.maps.Marker({
@@ -74,14 +76,15 @@
                 if (!current.innerHTML.match("Search By Station Address")) {
                     if (current.innerHTML.match("Spaces Near Me")) {
                         current.id="spaces";
-                    } else if (current.innerHTML.match("")) {
-                        current.removeAttribute("id");
-                    } else {
+                    } else if (current.innerHTML.match("Bikes Near Me")) {
                         current.id="bikes";
+                    } else {
+                        current.removeAttribute("id");
                     }
-                    document.getElementById("address").id="current"
+                    document.getElementById("address").id="current";
                 }
             }
+            console.log(current.innerHTML); // debugging buttons - problem with "current" id
         }
 
         function loadScript() {
