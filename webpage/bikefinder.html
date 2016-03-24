@@ -8,9 +8,10 @@
     
     <script>
         var myCentre;
+        // function to find location of user
         function findLocation() {
-            if (!navigator.geolocation) {
-                myCentre = new google.maps.LatLng(53.344007,-6.266802);
+            if (!navigator.geolocation) { // if location can't be found
+                myCentre = new google.maps.LatLng(53.344007,-6.266802); //default location
                 return;
             }
             function found(position) {
@@ -22,6 +23,7 @@
 
         function initialise(x) {
             findLocation();
+            // map properties
             var mapProps = {
                 center: myCentre,
                 zoom: 16,
@@ -29,8 +31,9 @@
             };
             var map = new google.maps.Map(document.getElementById("googleMap"),mapProps);
             
+            // user's current selection of functionality
             var current = document.getElementById("current");
-            if(x==1) { /* bikes near me */
+            if(x==1) { // bikes near me
                 var marker = new google.maps.Marker({
                     position: myCentre,
                     icon: "green.png"
@@ -39,12 +42,14 @@
                 if (!current.innerHTML.match("Bikes Near Me")) {
                     if (current.innerHTML.match("Spaces Near Me")) {
                         current.id="spaces";
+                    } else if (current.innerHTML.match("")) {
+                        current.removeAttribute("id");
                     } else {
                         current.id="address";
                     }
                     document.getElementById("bikes").id="current"
                 }
-            } else if (x==2) { /* stands near me */
+            } else if (x==2) { // spaces near me
                 var marker = new google.maps.Marker({
                     position: myCentre,
                     icon: "finishgreen.png"
@@ -53,20 +58,24 @@
                 if (!current.innerHTML.match("Spaces Near Me")) {
                     if (current.innerHTML.match("Bikes Near Me")) {
                         current.id="bikes";
+                    } else if (current.innerHTML.match("")) {
+                        current.removeAttribute("id");
                     } else {
                         current.id="address";
                     }
                     document.getElementById("spaces").id="current"
                 }
-            } else if (x==3) { /* search by address */
+            } else if (x==3) { // search by address
                 var marker = new google.maps.Marker({
                     position: myCentre,
-                    icon: "finishred.png" /* temporary holder */
+                    icon: "finishred.png" // temporary holder
                 });
                 marker.setMap(map);
                 if (!current.innerHTML.match("Search By Station Address")) {
                     if (current.innerHTML.match("Spaces Near Me")) {
                         current.id="spaces";
+                    } else if (current.innerHTML.match("")) {
+                        current.removeAttribute("id");
                     } else {
                         current.id="bikes";
                     }
@@ -101,13 +110,15 @@
     <nav><!-- navigation bar -->
         <ul>
             <!-- change to other maps -->
-            <li id="current" onclick="initialise(1)">Bikes Near Me</li>
+            <li id="bikes" onclick="initialise(1)">Bikes Near Me</li>
             <li id="spaces" onclick="initialise(2)">Spaces Near Me</li>
             <li id="address" onclick="initialise(3)">Search By Station Address</li>
         </ul>
     </nav>
     <div id="googleMap"></div>
 </div>
+    
+<p id="current"></p> <!-- holder for current ID -->
     
 <footer>
     <p>Copyright 2016 Stephen Murphy, Kevin Fitzpatrick, Keith Kennedy. All Rights Reserved.</p>
