@@ -8,11 +8,23 @@
     
     <script>
         var myCentre;
+        function findLocation() {
+            if (!navigator.geolocation) {
+                myCentre = new google.maps.LatLng(53.344007,-6.266802);
+                return;
+            }
+            function found(position) {
+                myCentre = new google.maps.LatLng(position.coords.latitude,
+                                                 position.coords.longitude);
+            }
+            navigator.geolocation.getCurrentPosition(found);
+        }
+
         function initialise(x) {
-            myCentre = new google.maps.LatLng(53.344007,-6.266802);
+            findLocation();
             var mapProps = {
                 center: myCentre,
-                zoom: 19,
+                zoom: 16,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("googleMap"),mapProps);
@@ -52,7 +64,7 @@
                     icon: "finishred.png" /* temporary holder */
                 });
                 marker.setMap(map);
-                if (!current.innerHTML.match("Search By Address")) {
+                if (!current.innerHTML.match("Search By Station Address")) {
                     if (current.innerHTML.match("Spaces Near Me")) {
                         current.id="spaces";
                     } else {
@@ -74,9 +86,6 @@
     </script>
 </head>
 
-<script src="http://maps.googleapis.com/maps/api/js"></script>
-
-
 
 
 
@@ -94,7 +103,7 @@
             <!-- change to other maps -->
             <li id="current" onclick="initialise(1)">Bikes Near Me</li>
             <li id="spaces" onclick="initialise(2)">Spaces Near Me</li>
-            <li id="address" onclick="initialise(3)">Search By Address</li>
+            <li id="address" onclick="initialise(3)">Search By Station Address</li>
         </ul>
     </nav>
     <div id="googleMap"></div>

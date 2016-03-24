@@ -46,9 +46,9 @@ nav {
 /* unordered list for buttons of nav bar */
 nav ul {
     margin-top: 0px;
-    height: 30px;
-    width: 520px;
-    margin: 0px auto;
+    height: 22px;
+    width: 590px;
+    margin: auto;
 }
 
 /* individual buttons */
