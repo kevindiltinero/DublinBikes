@@ -4,17 +4,16 @@ from time import gmtime, strftime
 import sqlite3
 import pandas.io.sql as pdsql
 import pandas as pd
+import re
+import json
+
 
 
 #Have to set up connection while using the database.
-conn = sqlite3.connect('dublinbikes.db')
+conn = sqlite3.connect('test.db')
 #Have to connect to the cursor
 c = conn.cursor()
 #Command to execute sql on the database
-
-
-conn = sqlite3.connect('dublinbikes.db')
-c = conn.cursor()
 
 
 def create_Database():
@@ -59,4 +58,23 @@ def into_Database(data):
     pdsql.write_frame(frame, "dublinbikes", conn, flavor="sqlite", if_exists="append", )
     #ALTERNATIVE frame.to_sql("dublinikes", conn, flavor='sqlite', schema=None, if_exists='append', index=True, index_label=None,)
     conn.commit()
+
+def from_database():
+    c.execute('SELECT position FROM dublinbikes')
+    output = c.fetchall()
+    return output
+
+def clean(element):
+    element = str(element)
+    remove_long = re.sub(r'[b]\"\{\'[a-z]{3}\'\:\s', '', element)
+    remove_lat = re.sub(r'\s\'[a-z]{3}\'\:', '', remove_long)
+    if remove_lat.endswith('"'):
+        remove_lat = remove_lat[:-1]
+    final = remove_lat[:-1]
+    result = final.split(', ')
+    best = []
+    for element in result:
+        best.append(float(element))
+    return best
+
 

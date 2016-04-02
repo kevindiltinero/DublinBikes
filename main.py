@@ -1,5 +1,6 @@
 from src import Scrape
 import time
+import json
 
 
 def single_run():
@@ -26,4 +27,20 @@ def main():
 #single_run()
 
 #THIS IS IT!!!!
-main()
+#main()
+
+#data = Scrape.scrape_Info()
+#Scrape.into_File(data, 'test.scrape.csv')
+
+array_for_javascript = []
+
+demo = Scrape.from_database()
+
+for i in range(0, len(demo)):
+    array_for_javascript.append(Scrape.clean(demo[i][0]))
+
+dict = {"name": array_for_javascript}
+
+with open('webpage/testit.json', 'w') as outfile:
+    json.dump(dict, outfile)
+
