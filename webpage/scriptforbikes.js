@@ -58,11 +58,24 @@ function initialise(x) {
 
         // user's current selection of functionality
         var current = document.getElementById("current");
+        var searchbox = document.getElementById("formdiv");
+        var mapcontainer = document.getElementById("googleMap");
         if (x == 1) { // bikes near me
+            searchbox.style.display = "none";
+            searchbox.style.height = "0px";
+            mapcontainer.style.height = "400px";
             for (var i = 0; i < myarray.length; i++) {
+                var icon;
+                if (myarray[i][2] < 5) {
+                    icon = "red.png";
+                } else if (myarray[i][2] < 15) {
+                    icon = "orange.png";
+                } else {
+                    icon = "green.png";
+                }
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
-                    icon: "green.png",
+                    icon: icon,
                     map: map
                 });
 
@@ -78,11 +91,13 @@ function initialise(x) {
                 })(marker, i));
             }
 
-            var marker = new google.maps.Marker({
-                position: myCentre,
-                icon: "green.png"
-            });
-            marker.setMap(map);
+			//test marker
+            //var marker = new google.maps.Marker({
+            //    position: myCentre,
+            //    icon: "green.png"
+            //});
+            //marker.setMap(map);
+            
             if (!current.innerHTML.match("Bikes Near Me")) {
                 if (current.innerHTML.match("Spaces Near Me")) {
                     current.id = "spaces";
@@ -95,19 +110,31 @@ function initialise(x) {
                 document.getElementById("bikes").id = "current";
             }
         } else if (x == 2) { // spaces near me
+            searchbox.style.display = "none";
+            searchbox.style.height = "0px";
+            mapcontainer.style.height = "400px";
 
             for (var i = 0; i < myarray.length; i++) {
+                var icon;
+                if (myarray[i][3] < 5) {
+                    icon = "finishred.png";
+                } else if (myarray[i][3] < 15) {
+                    icon = "finishorange.png";
+                } else {
+                    icon = "finishgreen.png";
+                }
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
-                    icon: "finishred.png",
+                    icon: icon,
                     map: map
                 });
             }
 
-            var marker = new google.maps.Marker({
-                position: myCentre,
-                icon: "finishgreen.png"
-            });
+            // test marker!
+            //var marker = new google.maps.Marker({
+            //    position: myCentre,
+            //    icon: "finishgreen.png"
+            //});
             marker.setMap(map);
             if (!current.innerHTML.match("Spaces Near Me")) {
                 if (current.innerHTML.match("Bikes Near Me")) {
@@ -120,6 +147,9 @@ function initialise(x) {
                 document.getElementById("spaces").id = "current";
             }
         } else if (x == 3) { // search by address
+            searchbox.style.display = "block";
+            searchbox.style.height = "60px";
+            mapcontainer.style.height = "340px";
 
             for (var i = 0; i < myarray.length; i++) {
                 marker = new google.maps.Marker({
@@ -128,11 +158,12 @@ function initialise(x) {
                     map: map
                 });
             }
-
-            var marker = new google.maps.Marker({
-                position: myCentre,
-                icon: "finishred.png" // temporary holder
-            });
+            
+//            test marker
+//            var marker = new google.maps.Marker({
+//                position: myCentre,
+//                icon: "finishred.png" // temporary holder
+//            });
 
 
             marker.setMap(map);
