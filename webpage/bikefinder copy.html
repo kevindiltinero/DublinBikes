@@ -27,16 +27,9 @@
     </nav>
     <div id="formdiv">
         <form>
-            <input list="stations" name="station-addresses">
+            <input list="datalist" name="stationaddresses">
             <!-- id necessary to link datalist to input -->
-            <datalist id="stations"><!-- won't work in safari according to W3 Schools -->
-                <option value="Smithfield North">Smithfield North</option><!-- predefined values for list -->
-                <option value="Parnell Square">Parnell Square</option>
-                <option value="Pearse Street">Pearse Street</option>
-                <option value="Excise Walk">Excise Walk</option>
-                <option value="Fitzwilliam Square West">Fitzwilliam Square West</option>
-                <option value="St. James Hospital (Central)">St. James Hospital (Central)</option>
-                <option value="Hanover Quay">Hanover Quay</option>
+            <datalist id="datalist"><!-- won't work in safari according to W3 Schools -->
             </datalist>
             
             <input id="submit" type="button" value="Search" onclick="searchForm(this.form)">
