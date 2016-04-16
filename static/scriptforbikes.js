@@ -3,10 +3,6 @@
 */
 //Stephen's Code
 var myCentre;
-var myarray;
-var map;
-var mapProps;
-var marker;
 // function to find location of user
 function findLocation() {
     if (!navigator.geolocation) { // if location can't be found
@@ -22,7 +18,7 @@ function findLocation() {
 
 findLocation();
 
-function initialise(x) { // x is for knowing which functionality is being used, y is for form submit
+function initialise(x) {
 
     //document.getElementById("random").innerHTML = "Hello";
     //This is a demo array.
@@ -35,7 +31,7 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 
     //This is the server request
     var xmlhttp = new XMLHttpRequest();
-    var url = "https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=a3a8a01538007e05924b81ebd579bbb053efe1da";
+    var url = "testit.json";
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             myFunction(xmlhttp.responseText);
@@ -46,19 +42,19 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 
     //Data goes in this function and executes
     function myFunction(response) {
-        console.log(typeof (response));
-        myarray = JSON.parse(response);
-        console.log(myarray[0].position.lat);
+        var thisdata = JSON.parse(response);
+        var mydata = thisdata;
+        var myarray = mydata.name;
 
 
         //findLocation();
         // map properties
-        mapProps = {
+        var mapProps = {
             center: myCentre,
             zoom: 16,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        map = new google.maps.Map(document.getElementById("googleMap"), mapProps);
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProps);
 
         // user's current selection of functionality
         var current = document.getElementById("current");
@@ -70,18 +66,17 @@ function initialise(x) { // x is for knowing which functionality is being used, 
             mapcontainer.style.height = "400px";
             for (var i = 0; i < myarray.length; i++) {
                 var icon;
-                if (myarray[i].available_bikes < 5) {
+                if (myarray[i][2] < 5) {
                     icon = "red.png";
-                } else if (myarray[i].available_bikes < 15) {
+                } else if (myarray[i][2] < 15) {
                     icon = "orange.png";
                 } else {
                     icon = "green.png";
                 }
                 marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(myarray[i].position.lat, myarray[i].position.lng),
+                    position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
                     icon: icon,
                     map: map
-//                    station_number: myarray[i].number
                 });
 
                 var infowindow = new google.maps.InfoWindow();
@@ -121,15 +116,15 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 
             for (var i = 0; i < myarray.length; i++) {
                 var icon;
-                if (myarray[i].available_bike_stands < 5) {
+                if (myarray[i][3] < 5) {
                     icon = "finishred.png";
-                } else if (myarray[i].available_bike_stands < 15) {
+                } else if (myarray[i][3] < 15) {
                     icon = "finishorange.png";
                 } else {
                     icon = "finishgreen.png";
                 }
                 marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(myarray[i].position.lat, myarray[i].position.lng),
+                    position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
                     icon: icon,
                     map: map
                 });
@@ -152,28 +147,17 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 document.getElementById("spaces").id = "current";
             }
         } else if (x == 3) { // search by address
-            var datalistData = "";
-            for (var i = 0; i < myarray.length; i++) {
-                datalistData += '<option value="';
-                datalistData += myarray[i].address;
-                datalistData += '">';
-                datalistData += myarray[i].address;
-                datalistData += '</option>';
-            }
-            console.log(typeof datalistData);
-            document.getElementById("datalist").innerHTML = datalistData;
-            
             searchbox.style.display = "block";
             searchbox.style.height = "60px";
             mapcontainer.style.height = "340px";
 
-//            for (var i = 0; i < myarray.length; i++) {
-//                marker = new google.maps.Marker({
-//                    position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
-//                    icon: "searchicon.png",
-//                    map: map
-//                });
-//            }
+            for (var i = 0; i < myarray.length; i++) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(myarray[i][1], myarray[i][0]),
+                    icon: "red.png",
+                    map: map
+                });
+            }
             
 //            test marker
 //            var marker = new google.maps.Marker({
@@ -182,7 +166,7 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 //            });
 
 
-//            marker.setMap(map);
+            marker.setMap(map);
             if (!current.innerHTML.match("Search By Station Address")) {
                 if (current.innerHTML.match("Spaces Near Me")) {
                     current.id = "spaces";
@@ -196,24 +180,6 @@ function initialise(x) { // x is for knowing which functionality is being used, 
         }
         console.log(current.innerHTML); // debugging buttons - problem with "current" id
     }
-}
-
-function searchForm(form) {
-    var stationIndex;
-    for (var i = 0; i < myarray.length; i++) {
-        if (myarray[i].address == form.stationaddresses.value) {
-            stationIndex = i;
-        }
-    }
-    var newCentre = new google.maps.LatLng(myarray[stationIndex].position.lat, myarray[stationIndex].position.lng);
-    console.log(newCentre);
-    marker = new google.maps.Marker({
-        position: newCentre,
-        icon: "searchicon.png",
-        map: map
-    });
-    map.setCenter(newCentre);
-    marker.setMap(map);
 }
 
 function loadScript() {
