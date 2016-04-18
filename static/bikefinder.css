@@ -127,6 +127,46 @@ input:focus {
     height: 400px;
 }
 
+#moreinfo {
+    border-top: black;
+    background-color: white;
+    padding: 4px;
+    display: none;
+}
+
+#infobutton {
+    color: white;
+    font-size: 12px;
+    background-color: rgb(0, 76, 84);
+    width: 30%;
+    min-width: 130px;
+    margin: auto;
+    padding: 3px;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 3px 10px 0px grey; /* makes a shadow behind button */
+    display: block;
+}
+
+#infobutton:hover {
+    background-color: rgb(77,139,154);
+}
+
+#extrainfo {
+    display: none;
+    max-width: 700px;
+    width: 80%;
+    min-height: 180px;
+    margin: 20px auto;
+    border: solid black;
+    background-color: white;
+    overflow-x: scroll;
+}
+
+#key {
+    padding: 5px;
+}
+
 /* styling on nav bar for button of current selection */
 #current {
     background-color: rgb(0, 76, 84);

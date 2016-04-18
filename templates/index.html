@@ -1,11 +1,13 @@
 <html>
-
-    <head>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}">
-        <script src="http://maps.google.com/maps/api/js?key=AIzaSyDDP-CkEcaBamF7DSlIgncplV3tiA6AkHY&sensor=false" type="text/javascript"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script>
-            var myCentre;
+<head>
+    
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bikefinder.css') }}">
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyDDP-CkEcaBamF7DSlIgncplV3tiA6AkHY&sensor=false" type="text/javascript"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    
+<script>
+    
+var myCentre;
 var myarray;
 var map;
 var mapProps;
@@ -83,10 +85,6 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 //                    stationdetails: (myarray[i])
                 });
 
-                var infowindow = new google.maps.InfoWindow();
-//                var stopinfo = marker.stationdetails.address;
-                // This is setting up the info boxes.
-
                 marker.addListener('click', function() {
                     console.log('marker', this);
                       $.ajax({
@@ -100,24 +98,27 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                             }
                         });
                 });
+                
+                // This is setting up the info boxes.
+                var infowindow = new google.maps.InfoWindow();
+//                var stopinfo = marker.stationdetails.address;
 
-
-//                google.maps.event.addListener(marker, 'click2', (function (marker, i) {
-////                    console.log(stopinfo);
-////                    stopinfo = 'hello';
-////                    console.log(marker.stationdetails);
-////                    stopinfo = "<p>Address: " + this.stationdetails.address + "<br />" +
-////                        "Station Number: " + this.stationdetails.number + "<br />" +
-////                        "Total Stands: " + this.stationdetails.bike_stands + "<br />" +
-////                        "Available Bikes: " + this.stationdetails.available_bikes + "<br />" +
-////                        "Available Bike Stands: " + this.stationdetails.available_bike_stands + "<br />" +
-////                        "Status: " + this.stationdetails.status + "</p>";
-////                    console.log(stopinfo);
-//                    return function () {
-//                        infowindow.setContent("<p>Address: " + myarray[i].address + "<br />" +
-//                                              "Total Stands: " + myarray[i].bike_stands + "<br />" +
-//                                              "Available Bikes: " + myarray[i].available_bikes + "<br />" +
-//                                              "Status: " + myarray[i].status + "</p>");
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+//                    console.log(stopinfo);
+//                    stopinfo = 'hello';
+//                    console.log(marker.stationdetails);
+//                    stopinfo = "<p>Address: " + this.stationdetails.address + "<br />" +
+//                        "Station Number: " + this.stationdetails.number + "<br />" +
+//                        "Total Stands: " + this.stationdetails.bike_stands + "<br />" +
+//                        "Available Bikes: " + this.stationdetails.available_bikes + "<br />" +
+//                        "Available Bike Stands: " + this.stationdetails.available_bike_stands + "<br />" +
+//                        "Status: " + this.stationdetails.status + "</p>";
+//                    console.log(stopinfo);
+                    return function () {
+                        infowindow.setContent("<p>Address: " + myarray[i].address + "<br />" +
+                                              "Total Stands: " + myarray[i].bike_stands + "<br />" +
+                                              "Available Bikes: " + myarray[i].available_bikes + "<br />" +
+                                              "Status: " + myarray[i].status + "</p>");
 //                        $.ajax({
 //                            //url: "/data_post",
 //                            url : 'http://127.0.0.1:5000/data',
@@ -129,14 +130,14 @@ function initialise(x) { // x is for knowing which functionality is being used, 
 //                                $('#response').html(data);
 //                            }
 //                        });
-//                        infowindow.open(map, marker);
-//                    }
-//                })(marker, i));
+                        infowindow.open(map, marker);
+                    }
+                })(marker, i));
             }
 
-            keyinfo = '<p><img src="green.png" alt="green bike icon">: 15 or more bikes available<br />' +
-                '<img src="orange.png" alt="orange bike icon">: 5-14 bikes available<br />' +
-                '<img src="red.png" alt="red bike icon">: Less than 5 bikes available</p>';
+            keyinfo = '<p><img src="{{ url_for('static', filename='green.png') }}" alt="green bike icon">: 15 or more bikes available<br />' +
+                '<img src="{{ url_for('static', filename='orange.png') }}" alt="orange bike icon">: 5-14 bikes available<br />' +
+                '<img src="{{ url_for('static', filename='red.png') }}" alt="red bike icon">: Less than 5 bikes available</p>';
             key.innerHTML = keyinfo;
 
             if (!current.innerHTML.match("Bikes Near Me")) {
@@ -184,9 +185,9 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 })(marker, i));
             }
 
-            keyinfo = '<p><img src="finishgreen.png" alt="green finish icon">: 15 or more bike stands available<br />' +
-                '<img src="finishorange.png" alt="orange finish icon">: 5-14 bike stands available<br />' +
-                '<img src="finishred.png" alt="red finish icon">: Less than 5 bike stands available</p>';
+            keyinfo = '<p><img src="{{ url_for('static', filename='finishgreen.png') }}" alt="green finish icon">: 15 or more bike stands available<br />' +
+                '<img src="{{ url_for('static', filename='finishorange.png') }}" alt="orange finish icon">: 5-14 bike stands available<br />' +
+                '<img src="{{ url_for('static', filename='finishred.png') }}" alt="red finish icon">: Less than 5 bike stands available</p>';
             key.innerHTML = keyinfo;
 
             marker.setMap(map);
@@ -217,7 +218,7 @@ function initialise(x) { // x is for knowing which functionality is being used, 
             searchbox.style.height = "60px";
             mapcontainer.style.height = "311px";
 
-            keyinfo = '<p><img src="searchicon.png" alt="searched station icon">: The location of the station you searched</p>';
+            keyinfo = '<p><img src="{{ url_for('static', filename='searchicon.png') }}" alt="searched station icon">: The location of the station you searched</p>';
             key.innerHTML = keyinfo;
 
             if (!current.innerHTML.match("Search By Station Address")) {
@@ -290,18 +291,18 @@ function loadScript() {
 window.onload = loadScript;
         </script>
 
-    </head>
+</head>
 
-    <header>
-    <h3 id="random"></h3>
-    <div>
-        <img src="../static/Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" />
-    </div>
-    <h1>BikeFinder <span>Dublin</span></h1>
-    </header>
+<header>
+<h3 id="random"></h3>
+<div>
+    <img src="../static/Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" />
+</div>
+<h1>BikeFinder <span>Dublin</span></h1>
+</header>
 
-    <body>
-    <div id="container">
+<body>
+<div id="container">
     <nav><!-- navigation bar -->
         <ul>
             <!-- change to other maps -->
@@ -321,23 +322,23 @@ window.onload = loadScript;
         </form>
     </div>
     <div id="googleMap"></div>
-            <div id="moreinfo">
+    <div id="moreinfo">
         <input id="infobutton" type="button" value="More Information" onclick="moreInfo()">
     </div>
-    </div>
+</div>
 
-    <div id="extrainfo">
+<div id="extrainfo">
     <div id="key"></div>
 </div>
 
-    <p id="current"></p> <!-- holder for current ID -->
+<p id="current"></p> <!-- holder for current ID -->
 
-        <div id="response"></div>
+<div id="response"></div>
 
-    </body>
+</body>
 
-    <footer>
-        <p>Copyright 2016 Stephen Murphy, Kevin Fitzpatrick, Keith Kennedy. All Rights Reserved.</p>
-    </footer>
+<footer>
+    <p>Copyright 2016 Stephen Murphy, Kevin Fitzpatrick, Keith Kennedy. All Rights Reserved.</p>
+</footer>
 
 </html>
