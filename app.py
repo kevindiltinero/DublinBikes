@@ -1,6 +1,7 @@
 from flask import *
 from flask import Flask, render_template_string, request
 import sqlite3
+import pandas as pd
 
 
 app = Flask(__name__)
@@ -39,6 +40,16 @@ def get_station_info(station_id):
         row = dict(row)
         results.append(row)
     return jsonify(stations=results)
+
+@app.route("/station_occupancy_t/<int:station_id>")
+def get_station_occupancy(station_id):                                                                                                                                                                                                                                   
+    conn = get_db()
+    df = pd.read_sql_query("select * from dbikes where number = :number", conn, params={"number": station_id})
+    df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
+    df.set_index('last_update_date', inplace=True)
+    res = df['available_bike_stands'].resample('1d').mean()
+    #print station_id, len(res)
+    return res.to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)

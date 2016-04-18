@@ -88,7 +88,7 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 marker.addListener('click', function() {
                     console.log('marker', this);
                       $.ajax({
-                            url : 'http://127.0.0.1:5000/get_station_info/' + this.station_number,
+                            url : 'http://127.0.0.1:5000/station_occupancy_t/' + this.station_number,
                             method: "GET",
                             success: function(data) {
 
