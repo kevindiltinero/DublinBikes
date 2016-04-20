@@ -4,7 +4,6 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bikefinder.css') }}">
 <script src="http://maps.google.com/maps/api/js?key=AIzaSyDDP-CkEcaBamF7DSlIgncplV3tiA6AkHY" type="text/javascript"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
 <script>
@@ -33,34 +32,31 @@ findLocation();
 // Load the Visualization API and the corechart package.
 google.charts.load('current', {'packages':['corechart']});
 
-// Set a callback to run when the Google Visualization API is loaded.
-//google.charts.setOnLoadCallback(drawChart);
-
-// Callback that creates and populates a data table,
-// instantiates the pie chart, passes in the data and
-// draws it.
-function drawChart() {
+function drawChart(bikes, stands, date) {
     document.getElementById('response').style.display = "block";
-
+    
     // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Day');
     data.addColumn('number', 'Bikes');
+    data.addColumn('number', 'Stands');
     data.addRows([
-        ['Monday', 3],
-        ['Tuesday', 1],
-        ['Wednesday', 1],
-        ['Thursday', 1],
-        ['Friday', 2]
+        ['Monday', bikes[0], stands[0]],
+        ['Tuesday', bikes[1], stands[1]],
+        ['Wednesday', bikes[2], stands[2]],
+        ['Thursday', bikes[3], stands[3]],
+        ['Friday', bikes[4], stands[4]],
+        ['Saturday', bikes[5], stands[5]],
+        ['Sunday', bikes[6], stands[6]]
     ]);
 
     // Set chart options
-    var options = {'title':'Projected Bikes at This Time per Day',
-                   'width':400,
+    var options = {'title':'Average Bikes/Stands per Day of Week',
+                   'width':680,
                    'height':300};
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.BarChart(document.getElementById('graph'));
+    var chart = new google.visualization.LineChart(document.getElementById('graph'));
     chart.draw(data, options);
 }
 
@@ -113,28 +109,13 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 } else {
                     icon = "{{ url_for('static', filename='green.png') }}";
                 }
-//                var arrayholder = myarray[i];
+                
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(myarray[i].position.lat, myarray[i].position.lng),
                     icon: icon,
                     map: map,
                     station_number: myarray[i].number
-//                    stationdetails: (myarray[i])
                 });
-
-//                marker.addListener('click', function() {
-//                    console.log('marker', this);
-//                    drawChart();
-//                    $.ajax({
-//                        url : '/get_station_info/' + this.station_number,
-//                        method: "GET",
-//                        success: function(data) {
-//                            console.log('received from flask:', data.stations[0].available_bikes, data.stations[0].available_bike_stands);
-//                            var avail = data.stations[0].available_bike_stands;
-//                            $('#response').html(avail);
-//                        }
-//                    });
-//                });
                 
                 // This is setting up the info boxes.
                 var infowindow = new google.maps.InfoWindow();
@@ -142,32 +123,33 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
                         console.log('marker', this);
-//                        drawChart();
                         $.ajax({
                             url : '/get_station_info/' + this.station_number,
                             method: "GET",
                             success: function(data) {
                                 console.log('received from flask:', data.stations[0].available_bikes, data.stations[0].available_bike_stands);
-                                var avail = data.stations[0].available_bike_stands;
-    //                            $('#response').html(avail);
+                                var bikeList = [];
+                                for (var i = 0; i < 7; i++) {
+                                    bikeList[i] = data.stations[i].available_bikes;
+                                }
+                                var standList = [];
+                                for (var i = 0; i < 7; i++) {
+                                    standList[i] = data.stations[i].available_bike_stands;
+                                }
+                                var dateTime = [];
+                                for (var i = 0; i < 7; i++) {
+                                    var date = new Date(data.stations[i].date * 1000);
+                                    dateTime[i] = date;
+                                }
+                                console.log(bikeList,standList,dateTime)
+                                drawChart(bikeList, standList, dateTime);
                             }
                         });
-                        drawChart();
+
                         infowindow.setContent("<p>Address: " + myarray[i].address + "<br />" +
                                               "Total Stands: " + myarray[i].bike_stands + "<br />" +
                                               "Available Bikes: " + myarray[i].available_bikes + "<br />" +
                                               "Status: " + myarray[i].status + "</p>");
-//                        $.ajax({
-//                            //url: "/data_post",
-//                            url : 'http://127.0.0.1:5000/data',
-//                            method: "POST",
-//                            data: {
-//                                data: $('#data').val()
-//                            },
-//                            success: function(data) {
-//                                $('#response').html(data);
-//                            }
-//                        });
                         infowindow.open(map, marker);
                     }
                 })(marker, i));
@@ -207,13 +189,37 @@ function initialise(x) { // x is for knowing which functionality is being used, 
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(myarray[i].position.lat, myarray[i].position.lng),
                     icon: icon,
-                    map: map
+                    map: map,
+                    station_number: myarray[i].number
                 });
 
                 var infowindow = new google.maps.InfoWindow();
                 // This is setting up the info boxes.
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
+                        console.log('marker', this);
+                        $.ajax({
+                            url : '/get_station_info/' + this.station_number,
+                            method: "GET",
+                            success: function(data) {
+                                console.log('received from flask:', data.stations[0].available_bikes, data.stations[0].available_bike_stands);
+                                var bikeList = [];
+                                for (var i = 0; i < 7; i++) {
+                                    bikeList[i] = data.stations[i].available_bikes;
+                                }
+                                var standList = [];
+                                for (var i = 0; i < 7; i++) {
+                                    standList[i] = data.stations[i].available_bike_stands;
+                                }
+                                var dateTime = [];
+                                for (var i = 0; i < 7; i++) {
+                                    var date = new Date(data.stations[i].date * 1000);
+                                    dateTime[i] = date;
+                                }
+//                                console.log(bikeList,standList,dateTime)
+                                drawChart(bikeList, standList, dateTime);
+                            }
+                        });
                         infowindow.setContent("<p>Address: " + myarray[i].address + "<br />" +
                                               "Total Stands: " + myarray[i].bike_stands + "<br />" +
                                               "Available Bike Stands: " + myarray[i].available_bike_stands + "<br />" +
@@ -295,15 +301,38 @@ function searchForm(form) {
             map: map
         });
 
-        var infowindow = new google.maps.InfoWindow();
         // This is setting up the info box
+        var infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(marker, 'click', (function () {
-                infowindow.setContent("<p>Address: " + myarray[stationIndex].address + "<br />" +
-                                      "Total Stands: " + myarray[stationIndex].bike_stands + "<br />" +
-                                      "Available Bikes: " + myarray[stationIndex].available_bikes + "<br />" +
-                                      "Available Bike Stands: " + myarray[stationIndex].available_bike_stands + "<br />" +
-                                      "Status: " + myarray[stationIndex].status + "</p>");
-                infowindow.open(map, marker);
+            console.log('marker', this);
+            $.ajax({
+                url : '/get_station_info/' + myarray[stationIndex].number,
+                method: "GET",
+                success: function(data) {
+                    console.log('received from flask:', data.stations[0].available_bikes, data.stations[0].available_bike_stands);
+                    var bikeList = [];
+                    for (var i = 0; i < 7; i++) {
+                        bikeList[i] = data.stations[i].available_bikes;
+                    }
+                    var standList = [];
+                    for (var i = 0; i < 7; i++) {
+                        standList[i] = data.stations[i].available_bike_stands;
+                    }
+                    var dateTime = [];
+                    for (var i = 0; i < 7; i++) {
+                        var date = new Date(data.stations[i].date * 1000);
+                        dateTime[i] = date;
+                    }
+                    console.log(bikeList,standList,dateTime)
+                    drawChart(bikeList, standList, dateTime);
+                }
+            });
+            infowindow.setContent("<p>Address: " + myarray[stationIndex].address + "<br />" +
+                                  "Total Stands: " + myarray[stationIndex].bike_stands + "<br />" +
+                                  "Available Bikes: " + myarray[stationIndex].available_bikes + "<br />" +
+                                  "Available Bike Stands: " + myarray[stationIndex].available_bike_stands + "<br />" +
+                                  "Status: " + myarray[stationIndex].status + "</p>");
+            infowindow.open(map, marker);
         }));
         map.setCenter(newCentre);
         marker.setMap(map);
@@ -312,10 +341,10 @@ function searchForm(form) {
 
 function moreInfo() {
     var extrainfo = document.getElementById("extrainfo");
-    if (extrainfo.style.display == 'none') {
-        extrainfo.style.display = 'block';
-    } else {
+    if (extrainfo.style.display == 'block') {
         extrainfo.style.display = 'none';
+    } else {
+        extrainfo.style.display = 'block';
     }
 }
 
