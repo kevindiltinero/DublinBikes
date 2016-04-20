@@ -1,11 +1,12 @@
 from flask import *
-from flask import Flask, render_template_string, request
+from flask import Flask, g, render_template, render_template_string, request, jsonify
+import json
 import sqlite3
 import pandas as pd
-
+import datetime
 
 app = Flask(__name__)
-DATABASE = 'dublinbikes.db'
+DATABASE = 'dublinbikes_3.db'
 
 #Connect to database
 def connect_to_database():
@@ -33,23 +34,33 @@ def index():
 @app.route('/get_station_info/<int:station_id>')
 def get_station_info(station_id):
     conn = get_db()
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
+    #conn = sqlite3.connect(dbfile)
+    #conn.row_factory = sqlite3.Row
+    #cur = conn.cursor()
+    df = pd.read_sql_query("select * from dublinbikes where number = :number", conn, params={"number":station_id})
+    df['last_update_dt'] = pd.to_datetime(df.last_update.apply(lambda x: datetime.datetime.strptime(str(x), "%Y%m%d%H%M%S")))
+    #print(df.last_update_dt.describe())
+    df.set_index('last_update_dt', inplace=True)
     results = []
-    for row	in cur.execute("select	available_bike_stands from dublinbikes where number = %i ;" %station_id):
-        row = dict(row)
-        results.append(row)
+    for i, row in df[['available_bike_stands', 'available_bikes']].resample('1d', how='mean').iterrows():
+        d = row.to_dict()
+        d['date'] = i.timestamp()
+        results.append(d)
+    print(results)
+    
     return jsonify(stations=results)
-
-@app.route("/station_occupancy_t/<int:station_id>")
-def get_station_occupancy(station_id):                                                                                                                                                                                                                                   
-    conn = get_db()
-    df = pd.read_sql_query("select * from dbikes where number = :number", conn, params={"number": station_id})
-    df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
-    df.set_index('last_update_date', inplace=True)
-    res = df['available_bike_stands'].resample('1d').mean()
-    #print station_id, len(res)
-    return res.to_json()
+# def get_station_info(station_id):
+#     conn = get_db()
+#     conn.row_factory = sqlite3.Row
+#     cur = conn.cursor()
+#     results = []
+#     count = 0
+#     for row	in cur.execute("select	available_bikes, available_bike_stands from dublinbikes where number = %i ;" %station_id):
+#         row = dict(row)
+#         results.append(row)
+#         count += 1
+#     print("Count is:", count)
+#     return jsonify(stations=results)
 
 if __name__ == '__main__':
     app.run(debug=True)

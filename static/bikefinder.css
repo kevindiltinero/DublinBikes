@@ -167,6 +167,17 @@ input:focus {
     padding: 5px;
 }
 
+#response {
+    display: none;
+    max-width: 700px;
+    width: 80%;
+    min-height: 180px;
+    margin: 20px auto;
+    border: solid black;
+    background-color: white;
+    overflow-x: scroll;
+}
+
 /* styling on nav bar for button of current selection */
 #current {
     background-color: rgb(0, 76, 84);
