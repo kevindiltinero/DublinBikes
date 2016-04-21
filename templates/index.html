@@ -262,7 +262,8 @@ function initialise(x) { // called when user chooses which functionality they wa
                 document.getElementById("spaces").id = "current";
             }
         } else if (x == 3) { // search by address
-            var datalistData = "";
+            var datalistData = ""; // list to hold stations for search bar
+            // for loop to add stations to list
             for (var i = 0; i < myarray.length; i++) {
                 datalistData += '<option value="';
                 datalistData += myarray[i].address;
