@@ -11,7 +11,7 @@ header div, header img {
     height: 130px;
 }
 
-header span {
+header span { /* span element on 'Dublin' in title */
     color: rgb(197,197,195);
 }
 
@@ -23,6 +23,7 @@ body {
     padding: 0px;
 }
 
+/* Container for option bar, map, 'more information' button and search bar */
 #container {
     max-width: 700px;
     width: 80%;
@@ -31,7 +32,7 @@ body {
     border: solid black;
 }
 
-/* navigation bar */
+/* option bar */
 nav {
     list-style-type: none;
     padding: 7px 0px;
@@ -43,7 +44,7 @@ nav {
     overflow-x: auto; /* bar scrolls if window is too small */
 }
 
-/* unordered list for buttons of nav bar */
+/* unordered list for buttons of option bar */
 nav ul {
     margin-top: 0px;
     height: 22px;
@@ -63,12 +64,6 @@ nav ul li {
     display: inline-block;
 }
 
-/* Not used currently - possibly will with JS */
-a {
-    text-decoration: none; /* removes underline from links */
-    color: inherit;
-}
-
 /* styling for when mouse is hovering on link */
 nav ul li:hover {
     color: rgb(77,139,154);
@@ -76,15 +71,14 @@ nav ul li:hover {
 
 
 /* form styling for search by address */
-#formdiv {
+#formdiv { /* form container */
     border-bottom: black;
     background-color: white;
-/*    margin: auto;*/
     display: none;
     height: 0px;
 }
 
-form {
+form { /* actual form containing search bar */
     width: 80%;
     margin: auto;
     padding: 3px;
@@ -105,7 +99,7 @@ input:focus {
     border-color: rgb(0, 76, 84);
 }
 
-#submit {
+#submit { /* submit button on search bar */
     color: white;
     font-size: 12px;
     background-color: rgb(0, 76, 84);
@@ -122,19 +116,19 @@ input:focus {
     background-color: rgb(77,139,154);
 }
 
-#googleMap {
+#googleMap { /* map div */
     width: 100%;
     height: 400px;
 }
 
-#moreinfo {
+#moreinfo { /* div containing more information button */
     border-top: black;
     background-color: white;
     padding: 4px;
     display: none;
 }
 
-#infobutton {
+#infobutton { /* actual button */
     color: white;
     font-size: 12px;
     background-color: rgb(0, 76, 84);
@@ -152,7 +146,7 @@ input:focus {
     background-color: rgb(77,139,154);
 }
 
-#extrainfo {
+#extrainfo { /* container for key div */
     display: none;
     max-width: 700px;
     width: 80%;
@@ -163,11 +157,11 @@ input:focus {
     overflow-x: scroll;
 }
 
-#key {
+#key { /* holds explanation of map icons */
     padding: 5px;
 }
 
-#response {
+#response { /* holds chart */
     display: none;
     max-width: 700px;
     width: 80%;

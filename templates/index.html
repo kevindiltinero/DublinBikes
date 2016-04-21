@@ -262,8 +262,8 @@ function initialise(x) { // called when user chooses which functionality they wa
                 document.getElementById("spaces").id = "current";
             }
         } else if (x == 3) { // search by address
-            var datalistData = ""; // list to hold stations for search bar
-            // for loop to add stations to list
+            var datalistData = ""; // string to hold html code of list of stations for search bar
+            // for loop to add html and stations to list
             for (var i = 0; i < myarray.length; i++) {
                 datalistData += '<option value="';
                 datalistData += myarray[i].address;
@@ -272,23 +272,25 @@ function initialise(x) { // called when user chooses which functionality they wa
                 datalistData += '</option>';
             }
             console.log(typeof datalistData);
-            document.getElementById("datalist").innerHTML = datalistData;
+            document.getElementById("datalist").innerHTML = datalistData; // insert datalist html into webpage
 
             document.getElementById("moreinfo").style.display = "block";
             searchbox.style.display = "block";
             searchbox.style.height = "60px";
-            mapcontainer.style.height = "311px";
+            mapcontainer.style.height = "311px"; // adjust height of map container to account for space taken by search box
 
+            // explanation of marker for 'search by station address'
             keyinfo = '<p><img src="{{ url_for('static', filename='searchicon.png') }}" alt="searched station icon">: The location of the station you searched</p>';
             key.innerHTML = keyinfo;
 
+            // 'current' id used to style button of currently selected functionality
             if (!current.innerHTML.match("Search By Station Address")) {
                 if (current.innerHTML.match("Spaces Near Me")) {
-                    current.id = "spaces";
+                    current.id = "spaces"; // change id from 'current' to 'spaces'
                 } else if (current.innerHTML.match("Bikes Near Me")) {
-                    current.id = "bikes";
+                    current.id = "bikes";// change id from 'current' to 'bikes'
                 } else {
-                    current.removeAttribute("id");
+                    current.removeAttribute("id"); // if 'current' id was on placeholder, remove without assigning new id
                 }
                 document.getElementById("address").id = "current";
             }
@@ -297,53 +299,59 @@ function initialise(x) { // called when user chooses which functionality they wa
     }
 }
 
+// function to handle users request for station in 'search by station address'
 function searchForm(form) {
-    var stationIndex;
-    var correctSearch = false;
-    for (var i = 0; i < myarray.length; i++) {
+    var stationIndex; // variable to hold index of user's requested station in response from Dublin Bikes API
+    var correctSearch = false; // changed to true if user's search term matches a station name
+    for (var i = 0; i < myarray.length; i++) { // loop checking if search term matches known station name
         if (myarray[i].address == form.stationaddresses.value) {
             stationIndex = i;
             correctSearch = true;
         }
     }
-    if (correctSearch == false) {
+    if (correctSearch == false) { // if user enters incorrect address
         alert("Address not recognised. Please try again or select option from list");
     } else {
-        marker.setMap(null);
+        marker.setMap(null); // remove existing markers  from map, so that only the marker of the searched station is on map
+        // set centre of map to location of station
         var newCentre = new google.maps.LatLng(myarray[stationIndex].position.lat, myarray[stationIndex].position.lng);
         console.log(newCentre);
         marker = new google.maps.Marker({
             position: newCentre,
-            icon: "{{ url_for('static', filename='searchicon.png') }}",
+            icon: "{{ url_for('static', filename='searchicon.png') }}", // icon specific to 'search by station address
             map: map
         });
 
         // This is setting up the info box
         var infowindow = new google.maps.InfoWindow();
+        
+        // if marker is clicked.....
         google.maps.event.addListener(marker, 'click', (function () {
             console.log('marker', this);
-            $.ajax({
+            $.ajax({ // request to database for station info to use on graph
                 url : '/get_station_info/' + myarray[stationIndex].number,
                 method: "GET",
                 success: function(data) {
                     console.log('received from flask:', data.stations[0].available_bikes, data.stations[0].available_bike_stands);
-                    var bikeList = [];
+                    var bikeList = []; //  array to hold average bikes per day
                     for (var i = 0; i < 7; i++) {
                         bikeList[i] = data.stations[i].available_bikes;
                     }
-                    var standList = [];
+                    var standList = []; //  array to hold average free spaces per day
                     for (var i = 0; i < 7; i++) {
                         standList[i] = data.stations[i].available_bike_stands;
                     }
-                    var dateTime = [];
+                    var dateTime = []; // array to hold dates the data was taken from
                     for (var i = 0; i < 7; i++) {
-                        var date = new Date(data.stations[i].date * 1000);
+                        var date = new Date(data.stations[i].date * 1000); // converting dates from unix time
                         dateTime[i] = date;
                     }
                     console.log(bikeList,standList,dateTime)
-                    drawChart(bikeList, standList, dateTime);
+                    drawChart(bikeList, standList, dateTime); // passing info to be drawn on chart
                 }
             });
+            
+            // contents of info window for marker
             infowindow.setContent("<p>Address: " + myarray[stationIndex].address + "<br />" +
                                   "Total Stands: " + myarray[stationIndex].bike_stands + "<br />" +
                                   "Available Bikes: " + myarray[stationIndex].available_bikes + "<br />" +
@@ -351,10 +359,13 @@ function searchForm(form) {
                                   "Status: " + myarray[stationIndex].status + "</p>");
             infowindow.open(map, marker);
         }));
+        
+        // centre map on location of station that the user requested
         map.setCenter(newCentre);
     }
 }
 
+// function for toggling between showing and not showing the more information box
 function moreInfo() {
     var extrainfo = document.getElementById("extrainfo");
     if (extrainfo.style.display == 'block') {
@@ -364,59 +375,53 @@ function moreInfo() {
     }
 }
 
-//function loadScript() {
-//    var script = document.createElement("script");
-//    script.type = "text/javascript";
-//    script.src = "http://maps.googleapis.com/maps/api/js?key=&sensor=false&callback=initialise";
-//    document.body.appendChild(script);
-//}
-
-//window.onload = loadScript;
 </script>
-
 </head>
 
 <header>
-<h3 id="random"></h3>
 <div>
-    <img src="../static/Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" />
+    <img src="../static/Dublin_Bikes_logo.jpg" alt="Dublin Bikes Logo" /> <!-- logo at top of page -->
 </div>
 <h1>BikeFinder <span>Dublin</span></h1>
 </header>
 
 <body>
+<!-- Container for option bar, map, 'more information' button and, in 'search by station address', search bar -->
 <div id="container">
     <nav><!-- navigation bar -->
         <ul>
-            <!-- change to other maps -->
+            <!-- buttons to switch between functionality. Call initialise function with different arguments, depending on button -->
             <li id="bikes" onclick="initialise(1)">Bikes Near Me</li>
             <li id="spaces" onclick="initialise(2)">Spaces Near Me</li>
             <li id="address" onclick="initialise(3)">Search By Station Address</li>
         </ul>
     </nav>
-    <div id="formdiv">
+    
+    <div id="formdiv"><!-- div containing search bar for 'search by station address' -->
         <form>
-            <input list="datalist" name="stationaddresses">
+            <input list="datalist" name="stationaddresses"><!-- list for station names to be added to by JavaScript -->
             <!-- id necessary to link datalist to input -->
             <datalist id="datalist"><!-- won't work in safari according to W3 Schools -->
             </datalist>
 
-            <input id="submit" type="button" value="Search" onclick="searchForm(this.form)">
+            <input id="submit" type="button" value="Search" onclick="searchForm(this.form)"><!-- search button -->
         </form>
     </div>
-    <div id="googleMap"></div>
-    <div id="moreinfo">
+    
+    <div id="googleMap"></div><!-- div to contain map -->
+    
+    <div id="moreinfo"><!-- div for 'more information' button -->
         <input id="infobutton" type="button" value="More Information" onclick="moreInfo()">
     </div>
 </div>
 
-<div id="extrainfo">
+<div id="extrainfo"><!-- container for extra information: key div -->
     <div id="key"></div>
 </div>
 
-<p id="current"></p> <!-- holder for current ID -->
+<p id="current"></p> <!-- placeholder for current ID -->
 
-<div id="response">
+<div id="response"><!-- container for graph created when map marker is clicked -->
     <div id="graph"></div>
 </div>
 
