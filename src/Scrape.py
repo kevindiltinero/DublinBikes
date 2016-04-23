@@ -55,7 +55,7 @@ def into_Database(data):
     frame['last_update'] = strftime("%Y%m%d%H%M%S", gmtime())
 
     #Write records stored in a dataframe to an SQL database.
-    pdsql.write_frame(frame, "dublinbikes", conn, flavor="sqlite", if_exists="append", )
+    frame.to_sql("dublinbikes", conn, flavor="sqlite", if_exists="append", index=False)
     #ALTERNATIVE frame.to_sql("dublinikes", conn, flavor='sqlite', schema=None, if_exists='append', index=True, index_label=None,)
     conn.commit()
 

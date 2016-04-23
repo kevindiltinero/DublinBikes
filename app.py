@@ -49,6 +49,10 @@ def get_station_info(station_id):
     print(results)
     
     return jsonify(stations=results)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 # def get_station_info(station_id):
 #     conn = get_db()
 #     conn.row_factory = sqlite3.Row
@@ -61,7 +65,3 @@ def get_station_info(station_id):
 #         count += 1
 #     print("Count is:", count)
 #     return jsonify(stations=results)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
